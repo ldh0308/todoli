@@ -13,23 +13,18 @@
 export default {
   data: function () {
     return {
-      newTodoItem: "",
+      newTodoItem: '',
     };
   },
   methods: {
-    addTodo: function () {
-        // newTodoItem이 공백이 아닐때 
-      if (this.newTodoItem !== "") {
-        // completed 텍스트가 체크되었는지 안되었는지 boolean값 삽입
-        // boolean값을 넣어서 스토리지 값에 넣을 예정
-        var obj = { completed: false, item: this.newTodoItem };
-        //자바스크립트 객체(obj)를 string값으로 넣어 주는 API
-        localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
+    addTodo: function() {
+      if (this.newTodoItem !== '') {
+        this.$emit('addItem', this.newTodoItem);
         this.clearInput();
       }
     },
     clearInput: function () {
-      this.newTodoItem = "";
+      this.newTodoItem = '';
     },
   },
 };

@@ -2,14 +2,15 @@
   <div>
     <ul>
       <li
-        v-for="(todoItem, index) in todoItems"
+        v-for="(todoItem, index) in propsdata"
         v-bind:key="todoItem.item"
         class="shadow"
       >
         <i
           class="checkBtn fa-solid fa-check"
           v-bind:class="{ checkBtnCompleted: todoItem.completed }"
-          v-on:click="toggleComplete(todoItem, index)"></i>
+          v-on:click="toggleComplete(todoItem, index)"
+        ></i>
         <!-- completed 속성에 따라 동적으로 바뀜 true면 textCompleted, false면 todoItem.completed-->
         <span v-bind:class="{ textCompleted: todoItem.completed }">{{
           todoItem.item
@@ -26,36 +27,18 @@
 
 <script>
 export default {
-  data: function () {
-    return {
-      todoItems: [],
-    };
-  },
+  props: ["propsdata"],
   methods: {
     removeTodo: function (todoItem, index) {
-      console.log(todoItem, index + 1);
-      localStorage.removeItem(todoItem); //로컬만 delete
-      this.todoItems.splice(index, 1); // 화면단도 delete
+      this.$emit("removeItem", todoItem, index);
     },
     toggleComplete: function (todoItem) {
-        // complete toggle 로직
-        todoItem.completed = !todoItem.completed;
-        // 로컬 스토리지 데이터 갱신
-        localStorage.removeItem(todoItem.item);
-        localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+      // complete toggle 로직
+      todoItem.completed = !todoItem.completed;
+      // 로컬 스토리지 데이터 갱신
+      localStorage.removeItem(todoItem.item);
+      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
     },
-  },
-  // 인스턴스가 생성되면서 불러와지는 로직 created
-  created: function () {
-    if (localStorage.length > 0) {
-      for (var i = 0; i < localStorage.length; i++) {
-        this.todoItems.push(
-          JSON.parse(localStorage.getItem(localStorage.key(i)))
-        );
-        // test
-        // console.log(localStorage.key(i))
-      }
-    }
   },
 };
 </script>
